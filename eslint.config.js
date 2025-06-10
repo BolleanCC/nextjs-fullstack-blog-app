@@ -35,6 +35,16 @@ export default [
         "warn",
         { allowConstantExport: true },
       ],
+      "react/self-closing-comp": ["error", {
+        "component": true,
+        "html": true
+      }],
+      "react/jsx-tag-spacing": ["error", {
+        "closingSlash": "never",
+        "beforeSelfClosing": "always",
+        "afterOpening": "never",
+        "beforeClosing": "never"
+      }],
     },
   },
 ];
