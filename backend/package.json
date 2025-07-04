@@ -11,10 +11,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@clerk/express": "^1.7.4",
+    "body-parser": "^2.2.0",
     "dotenv": "^17.0.1",
     "express": "^5.1.0",
     "mongodb": "^6.17.0",
     "mongoose": "^8.16.1",
-    "mongosh": "^2.5.3"
+    "mongosh": "^2.5.3",
+    "svix": "^1.68.0"
   }
 }
