@@ -1,4 +1,6 @@
 import User from "../models/user.model.js";
+import Post from "../models/post.model.js";
+import Comment from "../models/comment.model.js";
 import { Webhook } from "svix";
 
 export const clerkWebHook = async (req, res) => {
@@ -17,7 +19,7 @@ export const clerkWebHook = async (req, res) => {
     evt = wh.verify(payload, headers);
   } catch (err) {
     res.status(400).json({
-      message: "Webhook verification failed",
+      message: "Webhook verification failed!",
     });
   }
 
@@ -32,6 +34,15 @@ export const clerkWebHook = async (req, res) => {
     });
 
     await newUser.save();
+  }
+
+  if (evt.type === "user.deleted") {
+    const deletedUser = await User.findOneAndDelete({
+      clerkUserId: evt.data.id,
+    });
+
+    await Post.deleteMany({ user: deletedUser._id });
+    await Comment.deleteMany({ user: deletedUser._id });
   }
 
   return res.status(200).json({
