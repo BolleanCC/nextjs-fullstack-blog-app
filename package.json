@@ -1,5 +1,14 @@
 {
+  "scripts": {
+    "dev": "concurrently \"cd backend && npm run dev\" \"cd client && npm run dev\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd client && npm run dev",
+    "install:all": "npm install && cd backend && npm install && cd ../client && npm install"
+  },
   "dependencies": {
     "mongoose": "^8.16.1"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
   }
 }
