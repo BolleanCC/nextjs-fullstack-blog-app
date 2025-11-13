@@ -3,7 +3,7 @@ import Comment from "./Comment";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
-import { useAuth } from "@clerk/clerk-react";
+import { useAuth, useUser } from "@clerk/clerk-react";
 import { toast } from "react-toastify";
 
 const fetchComments = async (postId) => {
@@ -12,19 +12,26 @@ const fetchComments = async (postId) => {
 };
 
 const Comments = ({ postId }) => {
+  const { user } = useUser();
 
+  // Get the token from the auth provider
   const { getToken } = useAuth();
 
+  // Fetch the comments
   const { isPending, error, data } = useQuery({
     queryKey: ["comments", postId],
     queryFn: () => fetchComments(postId),
   });
 
+  // Create a query client
   const queryClient = useQueryClient();
 
+  // Create a mutation to add a comment
   const mutation = useMutation({
     mutationFn: async (newComment) => {
+      // Get the token from the auth provider
       const token = await getToken();
+      // Add the comment to the database
       return axios.post(`${import.meta.env.VITE_API_URL}/comments/${postId}`, newComment, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -32,19 +39,18 @@ const Comments = ({ postId }) => {
       });
     },
     onSuccess: (res) => {
+      // Show a success message
       toast.success("Comment has been created");
+      // Invalidate the queries
       queryClient.invalidateQueries({ queryKey: ["comments", postId] });
     },
     onError: (error) => {
+      // Show an error message
       toast.error(error.response.data);
     },
   });
 
-
-  if (isPending) return "loading...";
-  if (error) return "Something went wrong.." + error.message;
-  if (!data) return "Comments not found";
-
+  // Handle the submit event
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -56,7 +62,9 @@ const Comments = ({ postId }) => {
 
   return (
     <div className="flex flex-col gap-8 lg:w-3/5 mb-12">
+      {/* Title */}
       <h1 className="text-xl text-gray-500 underline">Comments</h1>
+      {/* Form to add a comment */}
       <form onSubmit={handleSubmit} className="flex items-center justify-between gap-8 w-full">
         <textarea
           name="desc"
@@ -67,9 +75,17 @@ const Comments = ({ postId }) => {
           Send
         </button>
       </form>
-      {data.map((comment) => (
-        <Comment key={comment._id} comment={comment} />
-      ))}
+      {isPending ? "loading..." : error ? "Something went wrong.." + error.message : !data ? "Comments not found" :
+
+        <>
+          {/* Show the loading comment */}
+          {mutation.isPending && (<Comment comment={{ desc: `${mutation.variables.desc} (Sending...)`, createdAt: new Date(), user: { username: user.username, img: user.imageUrl } }} />)}
+          {/* Show the comments */}
+          {data.map((comment) => (
+            <Comment key={comment._id} comment={comment} />
+          ))}
+        </>
+      }
     </div>
   );
 };

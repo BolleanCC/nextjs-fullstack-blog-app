@@ -21,7 +21,10 @@ export const addComments = async (req, res) => {
     const newComment = new Comment({ ...req.body, user: user._id, post: postId });
     const savedComment = await newComment.save();
 
-    res.status(201).json(savedComment);
+    setTimeout(() => {
+        res.status(201).json(savedComment);
+    }, 3000);
+
 };
 
 
