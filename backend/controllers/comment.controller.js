@@ -9,7 +9,7 @@ export const getPostComments = async (req, res) => {
 
 
 export const addComments = async (req, res) => {
-    const clerkUserId = req.auth.userId;
+    const clerkUserId = req.auth().userId;
     const postId = req.params.postId;
 
     if (!clerkUserId) {
@@ -29,7 +29,7 @@ export const addComments = async (req, res) => {
 
 
 export const deleteComments = async (req, res) => {
-    const clerkUserId = req.auth.userId;
+    const clerkUserId = req.auth().userId;
     const id = req.params.id;
 
     if (!clerkUserId) {
