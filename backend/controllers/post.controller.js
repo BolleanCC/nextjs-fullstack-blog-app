@@ -24,7 +24,7 @@ export const getPost = async (req, res, next) => {
   try {
     const post = await Post.findOne({ slug: req.params.slug }).populate(
       "user",
-      "username img"
+      "username img clerkUserId"
     );
 
     if (!post) {

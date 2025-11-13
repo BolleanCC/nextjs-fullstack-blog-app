@@ -23,7 +23,7 @@ const Navbar = () => {
       {/* LOGO */}
       <Link to="/" className="flex items-center gap-4 text-2xl font-bold">
         <Image src="logo.png" alt="Lama Logo" w={32} h={32} />
-        <span>lamalog</span>
+        <span>Songtao Blog</span>
       </Link>
       {/* MOBILE MENU */}
       <div className="md:hidden">
@@ -36,9 +36,8 @@ const Navbar = () => {
         </div>
         {/* MOBILE LINK LIST */}
         <div
-          className={`w-full h-screen flex flex-col items-center justify-center gap-8 font-medium text-lg absolute top-16  ${
-            open ? "-right-0" : "-right-[100%]"
-          }`}
+          className={`w-full h-screen flex flex-col items-center justify-center gap-8 font-medium text-lg absolute top-16  ${open ? "-right-0" : "-right-[100%]"
+            }`}
         >
           <Link to="/">Home</Link>
           <Link to="/">Trending</Link>
