@@ -19,8 +19,26 @@ export const addComments = async (req, res) => {
     const user = await User.findOne({ clerkUserId });
 
     const newComment = new Comment({ ...req.body, user: user._id, post: postId });
-    await newComment.save();
+    const savedComment = await newComment.save();
 
-    res.json(newComment);
+    res.status(201).json(savedComment);
 };
-export const deleteComments = async (req, res) => { };
+
+
+export const deleteComments = async (req, res) => {
+    const clerkUserId = req.auth.userId;
+    const id = req.params.id;
+
+    if (!clerkUserId) {
+        return res.status(401).json("Not authenticated!");
+    }
+
+    const user = await User.findOne({ clerkUserId });
+    const deletedComment = await Comment.findOneAndDelete({ _id: id, user: user._id });
+
+    if (!deletedComment) {
+        return res.status(403).json("You can delete only your comments!");
+    }
+
+    res.status(200).json("Comment has been deleted");
+};
