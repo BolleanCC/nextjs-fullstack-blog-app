@@ -8,7 +8,7 @@ import axios from "axios";
 
 const fetchPost = async (slug) => {
   const res = await axios.get(`${import.meta.env.VITE_API_URL}/posts/${slug}`);
-  return (await res).data;
+  return res.data;
 };
 
 const SinglePostPage = () => {
@@ -18,9 +18,9 @@ const SinglePostPage = () => {
     queryFn: () => fetchPost(slug),
   });
 
-  if (isPending) return "loading...";
-  if (error) return "Something went wrong.." + error.message;
-  if (!data) return "Post not found";
+  if (isPending) return <div className="text-center py-8">Loading...</div>;
+  if (error) return <div className="text-center py-8 text-red-600">Error: {error.message}</div>;
+  if (!data) return <div className="text-center py-8">Post not found</div>;
   return (
     <div className="flex flex-col gap-8">
       {/* detail */}
@@ -170,7 +170,7 @@ const SinglePostPage = () => {
           <Search />
         </div>
       </div>
-      <Comments />
+      <Comments postId={data._id} />
     </div>
   );
 };

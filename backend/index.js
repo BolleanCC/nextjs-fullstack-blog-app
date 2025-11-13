@@ -11,7 +11,7 @@ import { clerkMiddleware, requireAuth } from "@clerk/express";
 import cors from "cors";
 
 const app = express();
-app.use(cors(process.env.CLIENT_URL));
+app.use(cors({ origin: process.env.CLIENT_URL }));
 app.use(clerkMiddleware());
 app.use("/webhooks", webHookRouter);
 app.use(express.json());
