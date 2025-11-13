@@ -4,6 +4,16 @@ const PostMenuActions = ({ post }) => {
   const { user } = useUser();
   // Get the token from the auth provider
   const { getToken } = useAuth();
+
+  const { isPending, error, data } = useQuery({
+    queryKey: ["savedPosts"],
+    queryFn: async () => {
+      const token = await getToken();
+      return axios.get(`${import.meta.env.VITE_API_URL}/user/saved`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+    },
+  });
   return (
     <div className="">
       <h1 className="mt-8 mb-4 text-sm font-medium">Actions</h1>
