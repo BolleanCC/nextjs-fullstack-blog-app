@@ -5,22 +5,33 @@ import Search from "@/components/Search";
 import Comments from "@/components/Comments";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { format } from "timeago.js";
 
+// Fetch the post
 const fetchPost = async (slug) => {
   const res = await axios.get(`${import.meta.env.VITE_API_URL}/posts/${slug}`);
   return res.data;
 };
 
+// Single post page
 const SinglePostPage = () => {
+
   const { slug } = useParams();
+
+  // Fetch the post
   const { isPending, error, data } = useQuery({
     queryKey: ["post", slug],
     queryFn: () => fetchPost(slug),
   });
 
-  if (isPending) return <div className="text-center py-8">Loading...</div>;
-  if (error) return <div className="text-center py-8 text-red-600">Error: {error.message}</div>;
-  if (!data) return <div className="text-center py-8">Post not found</div>;
+  // Show the loading state
+  if (isPending) return "loading...";
+  // Show the error state
+  if (error) return "Something went wrong!" + error.message;
+  // Show the post not found state
+  if (!data) return "Post not found!";
+
+  // Show the post
   return (
     <div className="flex flex-col gap-8">
       {/* detail */}
@@ -34,7 +45,7 @@ const SinglePostPage = () => {
             <Link className="text-blue-800">{data.user.username}</Link>
             <span>on</span>
             <Link className="text-blue-800">{data.category}</Link>
-            <span>2 days ago</span>
+            <span>{format(data.createdAt)}</span>
           </div>
           <p className="text-gray-500 font-medium">{data.desc}</p>
         </div>

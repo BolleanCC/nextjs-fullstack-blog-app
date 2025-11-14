@@ -1,5 +1,5 @@
 import { useUser, useAuth } from "@clerk/clerk-react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
@@ -25,7 +25,10 @@ const PostMenuActions = ({ post }) => {
     },
   });
 
+  // Check if the post is saved
   const isSaved = data?.data.some((savedPost) => savedPost === post._id) || false;
+  // Check if the user is an admin
+  const isAdmin = user?.publicMetadata?.role === "admin" || false;
 
   // Delete the post
   const deleteMutation = useMutation({
@@ -44,6 +47,33 @@ const PostMenuActions = ({ post }) => {
     },
   });
 
+  // Query client
+  const queryClient = useQueryClient();
+  // Save the post
+  const saveMutation = useMutation({
+    mutationFn: async () => {
+      const token = await getToken();
+      return axios.patch(`${import.meta.env.VITE_API_URL}/users/save`, {
+        postId: post._id
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["savedPosts"] });
+    },
+    onError: (error) => {
+      toast.error(error.response.data);
+    },
+  });
+  // Handle the save event
+  const handleSave = () => {
+    if (!user) {
+      return navigate("/login");
+    }
+    saveMutation.mutate();
+  };
+
   // Handle the delete event
   const handleDelete = () => {
     deleteMutation.mutate();
@@ -52,7 +82,7 @@ const PostMenuActions = ({ post }) => {
   return (
     <div className="">
       <h1 className="mt-8 mb-4 text-sm font-medium">Actions</h1>
-      {isPending ? "Loading..." : error ? "Saved post fetch failed" : <div className="flex items-center gap-2 py-2 text-sm cursor-pointer">
+      {isPending ? "Loading..." : error ? "Saved post fetch failed" : <div className="flex items-center gap-2 py-2 text-sm cursor-pointer" onClick={handleSave}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 48 48"
@@ -63,12 +93,15 @@ const PostMenuActions = ({ post }) => {
             d="M12 4C10.3 4 9 5.3 9 7v34l15-9 15 9V7c0-1.3-3-3-3H12z"
             stroke="black"
             strokeWidth="2"
-            fill={isSaved ? "black" : "none"}
+            fill={saveMutation.isPending ? isSaved ? "none" : "black" : isSaved ? "black" : "none"}
           />
         </svg>
         <span>Save this Post</span>
+        {saveMutation.isPending && (
+          <span className="text-xs">(in progress)</span>
+        )}
       </div>}
-      {user && post.user.clerkUserId === user.id && (<div className="flex items-center gap-2 py-2 text-sm cursor-pointer" onClick={handleDelete}>
+      {user && (post.user.clerkUserId === user.id && isAdmin) && (<div className="flex items-center gap-2 py-2 text-sm cursor-pointer" onClick={handleDelete}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 50 50"

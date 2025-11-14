@@ -21,20 +21,15 @@ export const getPosts = async (req, res, next) => {
 };
 
 export const getPost = async (req, res, next) => {
-  try {
-    const post = await Post.findOne({ slug: req.params.slug }).populate(
-      "user",
-      "username img clerkUserId"
-    );
+  const post = await Post.findOne({ slug: req.params.slug }).populate(
+    "user",
+    "username img clerkUserId"
+  );
 
-    if (!post) {
-      return res.status(404).json({ message: "Post not found" });
-    }
-
-    res.status(200).json(post);
-  } catch (error) {
-    next(error);
-  }
+  // if (!post) {
+  //   return res.status(404).json({ message: "Post not found" });
+  // }
+  res.status(200).json(post);
 };
 
 export const createPost = async (req, res) => {
@@ -96,7 +91,7 @@ export const deletePost = async (req, res) => {
   res.status(200).json("Post has been deleted");
 };
 
-export const  uploadAuth = async (req, res) => {
+export const uploadAuth = async (req, res) => {
   const imageKit = new ImageKit({
     urlEndpoint: process.env.IK_URL_ENDPOINT,
     publicKey: process.env.IK_PUBLIC_KEY,
