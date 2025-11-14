@@ -82,7 +82,7 @@ const Comments = ({ postId }) => {
           {mutation.isPending && (<Comment comment={{ desc: `${mutation.variables.desc} (Sending...)`, createdAt: new Date(), user: { username: user.username, img: user.imageUrl } }} />)}
           {/* Show the comments */}
           {data.map((comment) => (
-            <Comment key={comment._id} comment={comment} />
+            <Comment key={comment._id} comment={comment} postId={postId} />
           ))}
         </>
       }
