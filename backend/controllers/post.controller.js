@@ -91,6 +91,35 @@ export const deletePost = async (req, res) => {
   res.status(200).json("Post has been deleted");
 };
 
+export const featurePost = async (req, res) => {
+  const clerkUserId = req.auth().userId;
+  const postId = req.body.postId;
+
+  if (!clerkUserId) {
+    return res.status(401).json("Not authenticated!");
+  }
+
+  const role = req.auth.sessionClaims?.metadata?.role || "user";
+
+  if (role !== "admin") {
+    return res.status(403).json("You are not authorized to feature posts");
+  }
+
+  const post = await Post.findById(postId);
+
+  if (!post) {
+    return res.status(404).json("Post not found");
+  }
+
+  // Toggle the featured status
+  post.isFeatured = post.isFeatured;
+
+  // Update the post
+  const updatedPost = await Post.findByIdAndUpdate(postId, { isFeatured: post.isFeatured }, { new: true });
+
+  res.status(200).json(updatedPost);
+};
+
 export const uploadAuth = async (req, res) => {
   const imageKit = new ImageKit({
     urlEndpoint: process.env.IK_URL_ENDPOINT,

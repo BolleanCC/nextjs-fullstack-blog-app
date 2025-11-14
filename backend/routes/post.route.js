@@ -5,6 +5,7 @@ import {
   createPost,
   deletePost,
   uploadAuth,
+  featurePost,
 } from "../controllers/post.controller.js";
 import { requireAuth } from "@clerk/express";
 
@@ -15,5 +16,6 @@ router.get("/", getPosts);
 router.get("/:slug", getPost);
 router.post("/", requireAuth(), createPost);
 router.delete("/:id", requireAuth(), deletePost);
+router.patch("/feature", requireAuth(), featurePost);
 
 export default router;
