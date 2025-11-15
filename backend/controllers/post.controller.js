@@ -7,12 +7,69 @@ export const getPosts = async (req, res, next) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 2;
 
-    const posts = await Post.find()
+    // Query object
+    const query = {};
+
+    // Query parameters
+    const cat = req.query.cat;
+    const author = req.query.author;
+    const searchQuery = req.query.search;
+    const sortQuery = req.query.sort;
+    const featured = req.query.featured;
+
+    //
+    if (cat) {
+      query.category = cat;
+    }
+
+    // Filter by author
+    if (author) {
+      const user = await User.findOne({ username: author }).select("_id");
+      if (!user) {
+        return res.status(404).json("Post not found!");
+      }
+      query.user = user._id;
+    }
+
+
+    // Filter by search query
+    if (searchQuery) {
+      query.title = { $regex: searchQuery, $options: "i" };
+    }
+
+    // Filter by featured
+    if (featured) {
+      query.isFeatured = featured;
+    }
+
+    // Sort object
+    let sortObj = { createdAt: -1 };
+    // Filter by sort query
+    if (sortQuery) {
+      switch (sortQuery) {
+        case "newest":
+          sortObj = { createdAt: -1 };
+          break;
+        case "popular":
+          sortObj = { visit: -1 };
+          break;
+        case "trending":
+          sortObj = { visit: -1 };
+          query.createdAt = { $gte: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7) };
+          break;
+        case "oldest":
+          sortObj = { createdAt: 1 };
+          break;
+      }
+    }
+
+    const posts = await Post.find(query)
       .populate("user", "username")
+      .sort(sortObj)
       .limit(limit)
       .skip((page - 1) * limit);
 
-    const totalPosts = await Post.countDocuments();
+    const totalPosts = await Post.countDocuments(query);
     const hasMore = page * limit < totalPosts;
     res.status(200).json({ posts, hasMore });
   } catch (error) {
@@ -70,7 +127,7 @@ export const deletePost = async (req, res) => {
     return res.status(401).json("Not authenticated!");
   }
 
-  const role = req.auth.sessionClaims?.metadata?.role || "user";
+  const role = req.auth().sessionClaims?.metadata?.role || "user";
 
   if (role === "admin") {
     await Post.findByIdAndDelete(req.params.id);
@@ -99,7 +156,7 @@ export const featurePost = async (req, res) => {
     return res.status(401).json("Not authenticated!");
   }
 
-  const role = req.auth.sessionClaims?.metadata?.role || "user";
+  const role = req.auth().sessionClaims?.metadata?.role || "user";
 
   if (role !== "admin") {
     return res.status(403).json("You are not authorized to feature posts");
@@ -112,10 +169,10 @@ export const featurePost = async (req, res) => {
   }
 
   // Toggle the featured status
-  post.isFeatured = post.isFeatured;
+  const newFeaturedStatus = !post.isFeatured;
 
   // Update the post
-  const updatedPost = await Post.findByIdAndUpdate(postId, { isFeatured: post.isFeatured }, { new: true });
+  const updatedPost = await Post.findByIdAndUpdate(postId, { isFeatured: newFeaturedStatus }, { new: true });
 
   res.status(200).json(updatedPost);
 };
