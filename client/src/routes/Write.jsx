@@ -39,7 +39,7 @@ const Write = () => {
     },
     onSuccess: (res) => {
       toast.success("Post has been created");
-      // navigate(`/${res.data.slug}`);
+      navigate(`/${res.data.slug}`);
     },
   });
 
