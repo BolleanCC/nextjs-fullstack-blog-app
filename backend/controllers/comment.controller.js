@@ -20,10 +20,24 @@ export const addComments = async (req, res) => {
         let user = await User.findOne({ clerkUserId });
         if (!user) {
             // Auto-create user if not exists
+            const authData = req.auth();
+            console.log("=== Clerk sessionClaims (Comment) ===");
+            console.log(JSON.stringify(authData.sessionClaims, null, 2));
+            console.log("===========================");
+
+            const email = authData.sessionClaims?.primaryEmailAddress?.emailAddress ||
+                         authData.sessionClaims?.email ||
+                         `${clerkUserId}@placeholder.com`;
+            const username = authData.sessionClaims?.username ||
+                            authData.sessionClaims?.primaryEmailAddress?.emailAddress ||
+                            email;
+
+            console.log(`Creating user with username: ${username}, email: ${email}`);
+
             user = new User({
                 clerkUserId,
-                username: req.auth().sessionClaims?.email || clerkUserId,
-                email: req.auth().sessionClaims?.email || `${clerkUserId}@placeholder.com`,
+                username,
+                email,
                 savedPosts: []
             });
             await user.save();

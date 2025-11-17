@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import { format } from "timeago.js";
 
 const PostListItem = ({ post }) => {
+  // Debug: log user properties
+  console.log('User object:', post.user);
+
   return (
     <div className="flex flex-col xl:flex-row gap-8 mb-12">
       {/* image */}
@@ -18,9 +21,9 @@ const PostListItem = ({ post }) => {
         </Link>
         <div className="flex items-center gap-2 text-gray-400 text-sm">
           <span>Written by</span>
-          <Link className="text-blue-800">{post.user?.username}</Link>
+          <Link className="text-blue-800" to={`/posts?author=${post.user?.username}`}>{post.user?.username}</Link>
           <span>On</span>
-          <Link className="text-blue-800">{post.category}</Link>
+          <Link className="text-blue-800" to={`/posts?cat=${post.category}`}>{post.category}</Link>
           <span>{format(post.createdAt)}</span>
         </div>
         <p>{post.desc}</p>
