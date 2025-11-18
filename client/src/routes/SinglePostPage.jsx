@@ -42,9 +42,13 @@ const SinglePostPage = () => {
           </h1>
           <div className="flex items-center gap-2 text-gray-400 text-sm">
             <span>Written by</span>
-            <Link className="text-blue-800">{data.user.username}</Link>
+            <Link className="text-blue-800" to={`/posts?author=${data.user.username}`}>
+              {data.user.username}
+            </Link>
             <span>on</span>
-            <Link className="text-blue-800">{data.category}</Link>
+            <Link className="text-blue-800" to={`/posts?cat=${data.category}`}>
+              {data.category}
+            </Link>
             <span>{format(data.createdAt)}</span>
           </div>
           <p className="text-gray-500 font-medium">{data.desc}</p>
@@ -58,78 +62,10 @@ const SinglePostPage = () => {
       {/* content */}
       <div className="flex flex-col md:flex-row gap-8">
         {/* text */}
-        <div className="lg:text-lg flex flex-col gap-6 text-justify">
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente
-            necessitatibus, iure impedit neque nesciunt recusandae sunt
-            veritatis facilis debitis maxime, ea earum hic inventore
-            voluptatibus accusamus rem repudiandae sit! Ut. Lorem ipsum dolor
-            sit amet consectetur adipisicing elit. Distinctio consequuntur est
-            laboriosam, quis qui cumque quia maiores enim esse repellat optio
-            possimus maxime perspiciatis iure fuga dolor voluptatibus delectus
-            laborum!
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente
-            necessitatibus, iure impedit neque nesciunt recusandae sunt
-            veritatis facilis debitis maxime, ea earum hic inventore
-            voluptatibus accusamus rem repudiandae sit! Ut. Lorem ipsum dolor
-            sit amet consectetur adipisicing elit. Distinctio consequuntur est
-            laboriosam, quis qui cumque quia maiores enim esse repellat optio
-            possimus maxime perspiciatis iure fuga dolor voluptatibus delectus
-            laborum!
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente
-            necessitatibus, iure impedit neque nesciunt recusandae sunt
-            veritatis facilis debitis maxime, ea earum hic inventore
-            voluptatibus accusamus rem repudiandae sit! Ut. Lorem ipsum dolor
-            sit amet consectetur adipisicing elit. Distinctio consequuntur est
-            laboriosam, quis qui cumque quia maiores enim esse repellat optio
-            possimus maxime perspiciatis iure fuga dolor voluptatibus delectus
-            laborum!
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente
-            necessitatibus, iure impedit neque nesciunt recusandae sunt
-            veritatis facilis debitis maxime, ea earum hic inventore
-            voluptatibus accusamus rem repudiandae sit! Ut. Lorem ipsum dolor
-            sit amet consectetur adipisicing elit. Distinctio consequuntur est
-            laboriosam, quis qui cumque quia maiores enim esse repellat optio
-            possimus maxime perspiciatis iure fuga dolor voluptatibus delectus
-            laborum!
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente
-            necessitatibus, iure impedit neque nesciunt recusandae sunt
-            veritatis facilis debitis maxime, ea earum hic inventore
-            voluptatibus accusamus rem repudiandae sit! Ut. Lorem ipsum dolor
-            sit amet consectetur adipisicing elit. Distinctio consequuntur est
-            laboriosam, quis qui cumque quia maiores enim esse repellat optio
-            possimus maxime perspiciatis iure fuga dolor voluptatibus delectus
-            laborum!
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente
-            necessitatibus, iure impedit neque nesciunt recusandae sunt
-            veritatis facilis debitis maxime, ea earum hic inventore
-            voluptatibus accusamus rem repudiandae sit! Ut. Lorem ipsum dolor
-            sit amet consectetur adipisicing elit. Distinctio consequuntur est
-            laboriosam, quis qui cumque quia maiores enim esse repellat optio
-            possimus maxime perspiciatis iure fuga dolor voluptatibus delectus
-            laborum!
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente
-            necessitatibus, iure impedit neque nesciunt recusandae sunt
-            veritatis facilis debitis maxime, ea earum hic inventore
-            voluptatibus accusamus rem repudiandae sit! Ut. Lorem ipsum dolor
-            sit amet consectetur adipisicing elit. Distinctio consequuntur est
-            laboriosam, quis qui cumque quia maiores enim esse repellat optio
-            possimus maxime perspiciatis iure fuga dolor voluptatibus delectus
-            laborum!
-          </p>
-        </div>
+        <div
+          className="lg:text-lg flex flex-col gap-6 text-justify"
+          dangerouslySetInnerHTML={{ __html: data.content }}
+        />
         {/* menu */}
         <div className="px-4 h-max sticky top-8">
           <h1 className="mb-4 text-sm font-medium">Author</h1>
@@ -143,11 +79,11 @@ const SinglePostPage = () => {
                   h="48"
                 />
               )}
-              <Link className="text-blue-800">{data.user.username}</Link>
+              <Link className="text-blue-800" to={`/posts?author=${data.user.username}`}>
+                {data.user.username}
+              </Link>
             </div>
-            <p className="text-sm text-gray-500">
-              Lorem, ipsum dolor sit amet consectetur
-            </p>
+            <p className="text-sm text-gray-500">Posts by {data.user.username}</p>
             <div className="flex gap-2">
               <Link>
                 <Image src="facebook.svg" />
@@ -160,20 +96,22 @@ const SinglePostPage = () => {
           <PostMenuActions post={data} />
           <h1 className="mt-8 mb-4 text-sm font-medium">Categories</h1>
           <div className="flex flex-col gap-2 text-sm">
-            <Link className="underline">All</Link>
-            <Link className="underline" to="/">
+            <Link className="underline" to="/posts">
+              All
+            </Link>
+            <Link className="underline" to="/posts?cat=web-design">
               Web Design
             </Link>
-            <Link className="underline" to="/">
+            <Link className="underline" to="/posts?cat=development">
               Development
             </Link>
-            <Link className="underline" to="/">
+            <Link className="underline" to="/posts?cat=databases">
               Databases
             </Link>
-            <Link className="underline" to="/">
+            <Link className="underline" to="/posts?cat=seo">
               Search Engines
             </Link>
-            <Link className="underline" to="/">
+            <Link className="underline" to="/posts?cat=marketing">
               Marketing
             </Link>
           </div>
