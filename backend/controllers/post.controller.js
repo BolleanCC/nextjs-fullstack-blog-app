@@ -78,15 +78,19 @@ export const getPosts = async (req, res, next) => {
 };
 
 export const getPost = async (req, res, next) => {
-  const post = await Post.findOne({ slug: req.params.slug }).populate(
-    "user",
-    "username img clerkUserId"
-  );
+  try {
+    const post = await Post.findOne({ slug: req.params.slug }).populate(
+      "user",
+      "username img clerkUserId"
+    );
 
-  // if (!post) {
-  //   return res.status(404).json({ message: "Post not found" });
-  // }
-  res.status(200).json(post);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+    res.status(200).json(post);
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const createPost = async (req, res) => {

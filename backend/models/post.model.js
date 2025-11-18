@@ -35,7 +35,7 @@ const postSchema = new Schema(
       default: false,
     },
     visit: {
-      type: Boolean,
+      type: Number,
       default: 0,
     },
   },
