@@ -7,15 +7,15 @@ const PostListItem = ({ post }) => {
   console.log('User object:', post.user);
 
   return (
-    <div className="flex flex-col xl:flex-row gap-8 mb-12">
+    <div className="flex flex-col xl:flex-row gap-8 mb-12 min-w-0">
       {/* image */}
       {post.img && (
-        <div className="md:hidden xl:block">
-          <Image src={post.img} className="rounded-2xl object-cover" w="735" />
+        <div className="md:hidden xl:block xl:w-1/3 flex-shrink-0">
+          <Image src={post.img} className="rounded-2xl object-cover w-full" w="735" />
         </div>
       )}
       {/* details */}
-      <div className="flex flex-col gap-4 xl:w-2/3">
+      <div className="flex flex-col gap-4 xl:flex-1 min-w-0">
         <Link to={`/${post.slug}`} className="text-4xl font-semibold">
           {post.title}
         </Link>
