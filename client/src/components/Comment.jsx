@@ -42,7 +42,7 @@ const Comment = ({ comment, postId }) => {
       <div className="flex items-center gap-4">
         {comment.user.img && <Image
           src={comment.user.img}
-          className="w-10 h-10 rounded-full object-cover"
+          className="w-10 h-10 rounded-full object-cover aspect-square"
           w="40"
         />}
         <span className="font-medium">{comment.user.username}</span>

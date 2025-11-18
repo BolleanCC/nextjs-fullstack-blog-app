@@ -69,9 +69,9 @@ const SideMenu = () => {
       </div>
       <h1 className="mt-8 mb-4 text-sm font-medium">Categories</h1>
       <div className="flex flex-col gap-2 text-sm">
-        <span className="underline cursor-pointer" onClick={() => handleCategoryChange("general")}>
+        <Link className="underline cursor-pointer" to="/posts">
           All
-        </span>
+        </Link>
         <span className="underline cursor-pointer" onClick={() => handleCategoryChange("web-design")}>
           Web Design
         </span>

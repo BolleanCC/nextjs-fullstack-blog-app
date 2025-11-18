@@ -13,6 +13,7 @@ import Write from "./routes/Write";
 import LoginPage from "./routes/LoginPage";
 import RegisterPage from "./routes/RegisterPage";
 import SinglePostPage from "./routes/SinglePostPage";
+import About from "./routes/About";
 import MainLayout from "./layouts/MainLayout";
 import { ClerkProvider } from "@clerk/clerk-react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
       {
         path: "/posts",
         element: <PostListPage />,
+      },
+      {
+        path: "/about",
+        element: <About />,
       },
       {
         path: "/:slug",

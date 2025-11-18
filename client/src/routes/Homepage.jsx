@@ -17,13 +17,12 @@ const Homepage = () => {
         {/* titles */}
         <div className="">
           <h1 className="text-gray-800 text-2xl md:text-5xl lg:text-6xl font-bold">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            Discover Stories, Thinking, and Expertise from Writers on Any Topic
           </h1>
           <p className="mt-8 text-md md:text-xl">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime fuga
-            asperiores ipsum, modi inventore, ipsam culpa voluptates repellendus
-            maiores quae labore cumque tempore sequi dolor itaque? Id blanditiis
-            enim sint.
+            Explore in-depth articles on web development, design, databases, SEO, and marketing.
+            Join our community of developers, designers, and digital marketers sharing practical
+            insights and real-world experiences to help you grow your skills and stay ahead.
           </p>
         </div>
         {/* animated button */}
